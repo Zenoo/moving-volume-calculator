@@ -1,0 +1,64 @@
+.mvc-wrapper{
+	font-family: sans-serif;
+
+	a{
+		text-decoration: none;
+
+		&:link,&:visited{
+			color: inherit;
+		}
+
+		&:hover,&:active{
+			opacity: 0.8;
+		}
+	}
+
+	p{
+		margin: 0;
+		padding: 0;
+
+		.mvc-volume-input{
+			padding: 5px;
+		}
+
+		&.mvc-surface-toggler{
+			font-size: 10px;
+
+			a{
+				&.mvc-surface-enable{
+					&:before{
+						content: 'v';
+					}
+				}
+				
+				&.mvc-surface-disable{
+					&:before{
+						content: 'x';
+					}
+				}
+
+				&:before{
+					padding-right: 5px;
+					text-decoration: none;
+				}
+			}
+		}
+
+		.mvc-hint{
+			font-size: 11px;
+			
+			&.error{
+				color: red;
+
+				&+input{
+					border-color: red;
+				}
+			}
+
+			&:after{
+				content: '\a';
+				white-space: pre;
+			}
+		}
+	}
+}
