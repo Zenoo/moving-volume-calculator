@@ -1,0 +1,22 @@
+{
+  "name": "moving-volume-calculator",
+  "version": "0.0.1",
+  "description": "Calculate the volume for your move",
+  "main": "MovingVolumeCalculator.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Zenoo/moving-volume-calculator.git"
+  },
+  "keywords": [
+    "loader"
+  ],
+  "author": "Zenoo",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/Zenoo/moving-volume-calculator/issues"
+  },
+  "homepage": "https://github.com/Zenoo/moving-volume-calculator#readme"
+}
