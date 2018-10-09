@@ -42,13 +42,19 @@ class MovingVolumeCalculator{ //eslint-disable-line no-unused-vars
 		this._dictionary = {
 			en: {
 				volume: 'Volume (m3)',
-				surfaceOption: 'I don\'t know my volume / I\'d rather fill out my surface',
-				wrongVolume: 'The volume isn\'t a valid number'
+				surfaceOptionEnable: 'I don\'t know my volume / I\'d rather fill out my surface',
+				surfaceOptionDisable: 'I\'d rather fill out my volume',
+				wrongVolume: 'The volume isn\'t a valid number',
+				surface: 'Surface (m2)',
+				wrongSurface: 'The surface isn\'t a valid number'
 			},
 			fr: {
 				volume: 'Volume (m3)',
-				surfaceOption: 'Je ne connais pas mon volume / Je préfère renseigner ma surface',
-				wrongVolume: 'Le volume n\'est pas un nombre valide'
+				surfaceOptionEnable: 'Je ne connais pas mon volume / Je préfère renseigner ma surface',
+				surfaceOptionDisable: 'Je préfère renseigner mon volume',
+				wrongVolume: 'Le volume n\'est pas un nombre valide',
+				surface: 'Surface (m2)',
+				wrongSurface: 'The surface isn\'t a valid number'
 			}
 		};
 	}
@@ -60,24 +66,42 @@ class MovingVolumeCalculator{ //eslint-disable-line no-unused-vars
     _build(){
 		this._wrapper.classList.add('mvc-wrapper');
 
+		/*
+		 *	Volume Input
+		 */
 		let line = document.createElement('p');
 
 		this._wrapper.appendChild(line);
 
-		this._input = document.createElement('input');
-		this._input.classList.add('mvc-volume-input');
-		this._input.placeholder = this._dictionary[this._parameters.lang].volume;
-		line.appendChild(this._input);
+		this._volumeInput = document.createElement('input');
+		this._volumeInput.classList.add('mvc-volume-input');
+		this._volumeInput.placeholder = this._dictionary[this._parameters.lang].volume;
+		line.appendChild(this._volumeInput);
 
+		/*
+		 *	Surface toggler
+		 */
 		line = document.createElement('p');
 		line.classList.add('mvc-surface-toggler');
 		this._wrapper.appendChild(line);
 
 		this._surfaceOption = document.createElement('a');
 		this._surfaceOption.classList.add('mvc-surface-enable');
-		this._surfaceOption.innerText = this._dictionary[this._parameters.lang].surfaceOption;
+		this._surfaceOption.innerText = this._dictionary[this._parameters.lang].surfaceOptionEnable;
 		this._surfaceOption.href = '';
 		line.appendChild(this._surfaceOption);
+
+		/*
+		 *	Surface Input
+		 */
+		line = document.createElement('p');
+		line.classList.add('mvc-hidden');
+		this._wrapper.appendChild(line);
+
+		this._surfaceInput = document.createElement('input');
+		this._surfaceInput.classList.add('mvc-surface-input');
+		this._surfaceInput.placeholder = this._dictionary[this._parameters.lang].surface;
+		line.appendChild(this._surfaceInput);
 	}
 
 	/**
@@ -85,12 +109,50 @@ class MovingVolumeCalculator{ //eslint-disable-line no-unused-vars
      * @private
      */
     _listen(){
-		this._input.addEventListener('input', () => {
-			if((/^\d+([.,]\d{0,2})?$/u).test(this._input.value)){
-				this._clearHints(this._input);
-				this.volume = +this._input.value.replace(',', '.');
+		// Volume input handler
+		this._volumeInput.addEventListener('input', () => {
+			if((/^\d+([.,]\d{0,2})?$/u).test(this._volumeInput.value)){
+				this._clearHints(this._volumeInput);
+				this.volume = +this._volumeInput.value.replace(',', '.');
 			}else{
-				this._addHint(this._input, 'error', this._dictionary[this._parameters.lang].wrongVolume);
+				this._addHint(this._volumeInput, 'error', this._dictionary[this._parameters.lang].wrongVolume);
+			}
+		});
+
+		// Surface toggler handler
+		this._surfaceOption.addEventListener('click', e => {
+			e.preventDefault();
+			
+			if(this._surfaceOption.classList.contains('mvc-surface-enable')){
+				this._surfaceOption.classList.remove('mvc-surface-enable');
+				this._surfaceOption.classList.add('mvc-surface-disable');
+				this._surfaceOption.innerText = this._dictionary[this._parameters.lang].surfaceOptionDisable;
+
+				this._volumeInput.disabled = true;
+
+				this._surfaceInput.parentElement.classList.remove('mvc-hidden');
+			}else{
+				this._surfaceOption.classList.remove('mvc-surface-disable');
+				this._surfaceOption.classList.add('mvc-surface-enable');
+				this._surfaceOption.innerText = this._dictionary[this._parameters.lang].surfaceOptionEnable;
+
+				this._volumeInput.disabled = false;
+
+				this._surfaceInput.parentElement.classList.add('mvc-hidden');
+			}
+		});
+
+		// Surface input handler
+		this._surfaceInput.addEventListener('input', () => {
+			if((/^\d+([.,]\d{0,2})?$/u).test(this._surfaceInput.value)){
+				this._clearHints(this._surfaceInput);
+
+				const volume = MovingVolumeCalculator.fromSurface(+this._surfaceInput.value.replace(',', '.'));
+
+				this.volume = volume;
+				this._volumeInput.value = volume;
+			}else{
+				this._addHint(this._surfaceInput, 'error', this._dictionary[this._parameters.lang].wrongSurface);
 			}
 		});
 	}
@@ -139,6 +201,16 @@ class MovingVolumeCalculator{ //eslint-disable-line no-unused-vars
      */
     destroy(){
 
+	}
+
+	/**
+     * Calculates a volume from a surface
+	 * @param {Number} surface The surface to calculate from
+	 * @returns {Number} The 2-decimal rounded volume
+	 * @static
+     */
+    static fromSurface(surface){
+		return Math.round(0.45 * surface * 100) / 100;
 	}
 
 	/**
