@@ -13,39 +13,16 @@
 		}
 	}
 
+	.mvc-hidden{
+		display: none !important;
+	}
+
 	p{
 		margin: 0;
 		padding: 0;
 
 		input{
 			padding: 5px;
-		}
-
-		&.mvc-surface-toggler{
-			font-size: 10px;
-
-			a{
-				&.mvc-surface-enable{
-					&:before{
-						content: 'v';
-					}
-				}
-				
-				&.mvc-surface-disable{
-					&:before{
-						content: 'x';
-					}
-				}
-
-				&:before{
-					padding-right: 5px;
-					text-decoration: none;
-				}
-			}
-		}
-
-		&.mvc-hidden{
-			display: none;
 		}
 
 		.mvc-hint{
@@ -62,6 +39,108 @@
 			&:after{
 				content: '\a';
 				white-space: pre;
+			}
+		}
+	}
+
+	.mvc-surface-toggler{
+		font-size: 10px;
+
+		a{
+			&.mvc-surface-enable{
+				&:before{
+					content: 'v';
+				}
+			}
+			
+			&.mvc-surface-disable{
+				&:before{
+					content: 'x';
+				}
+			}
+
+			&:before{
+				padding-right: 5px;
+				text-decoration: none;
+			}
+		}
+	}
+
+	.mvc-rooms-toggler{
+		font-size: 10px;
+
+		a{
+			&.mvc-rooms-enable{
+				&:before{
+					content: 'v';
+				}
+			}
+			
+			&.mvc-rooms-disable{
+				&:before{
+					content: 'x';
+				}
+			}
+
+			&:before{
+				padding-right: 5px;
+				text-decoration: none;
+			}
+		}
+	}
+
+	.mvc-rooms{
+		display: flex;
+		list-style-type: none;
+		flex-wrap: wrap;
+
+		li{
+			position: relative;
+			display: inline-flex;
+			align-items: center;
+			justify-content: space-around;
+			cursor: pointer;
+			border: 1px solid grey;
+			padding: 5px;
+			font-size: 12px;
+			width: 50px;
+			height: 50px;
+			text-align: center;
+			-webkit-user-select: none;
+			-moz-user-select: none;
+			-ms-user-select: none;
+			user-select: none;
+
+			&:hover{
+				opacity: 0.8;
+
+				span{
+					opacity: 1;
+				}
+
+				svg{
+					opacity: 0.1;
+				}
+			}
+
+			&:active{
+				border: 1px solid black;
+				-webkit-box-shadow: inset 0 0 10px rgba(0,0,0,0.75);
+				-moz-box-shadow: inset 0 0 10px rgba(0,0,0,0.75);
+				box-shadow: inset 0 0 10px rgba(0,0,0,0.75);
+			}
+
+			span{
+				opacity: 0;
+			}
+
+			svg{
+				position: absolute;
+				top: 0;
+				left: 0;
+				height: calc(~"100% - 10px");
+				width: calc(~"100% - 10px");
+				padding: 5px;
 			}
 		}
 	}

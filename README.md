@@ -38,3 +38,4 @@ See this [JSFiddle](https://jsfiddle.net/Zenoo0/9z6evb7a/) for a working example
 ## Authors
 
 * **Zenoo** - *Initial work* - [Zenoo.fr](http://zenoo.fr)
+* <div>Icons made by <a href="https://www.flaticon.com/authors/phatplus" title="phatplus">phatplus</a> from <a href="https://www.flaticon.com/" title="Flaticon">www.flaticon.com</a> is licensed by <a href="http://creativecommons.org/licenses/by/3.0/" title="Creative Commons BY 3.0" target="_blank">CC 3.0 BY</a></div>
