@@ -134,13 +134,60 @@
 				opacity: 0;
 			}
 
-			svg{
+			.mvc-rooms-icon{
 				position: absolute;
 				top: 0;
 				left: 0;
 				height: calc(~"100% - 10px");
 				width: calc(~"100% - 10px");
 				padding: 5px;
+			}
+
+			&:before{
+				display: none;
+				content: attr(data-amount);
+				position: absolute;
+				top: 0;
+				left: 0;
+				padding: 5px;
+				background-color: white;
+				border: 1px solid grey;
+				border-left: 0;
+				border-top: 0;
+				height: 10px;
+				width: 10px;
+				line-height: 10px;
+				z-index: 1;
+			}
+
+			.mvc-rooms-cancel{
+				display: none;
+				position: absolute;
+				top: 0;
+				right: 0;
+				padding: 5px;
+				background-color: white;
+				border: 1px solid grey;
+				border-right: 0;
+				border-top: 0;
+				height: 10px;
+				width: 10px;
+				line-height: 10px;
+				z-index: 1;
+
+				&:hover{
+					background-color: #fafafa;
+				}
+			}
+
+			&:not([data-amount="0"]){
+				&:before{
+					display: block;
+				}
+
+				.mvc-rooms-cancel{
+					display: block;
+				}
 			}
 		}
 	}
