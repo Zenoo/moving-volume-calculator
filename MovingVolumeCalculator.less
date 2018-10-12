@@ -118,8 +118,12 @@
 					opacity: 1;
 				}
 
-				svg{
+				.mvc-rooms-icon{
 					opacity: 0.1;
+				}
+
+				.mvc-rooms-surface{
+					display: block;
 				}
 			}
 
@@ -178,6 +182,21 @@
 				&:hover{
 					background-color: #fafafa;
 				}
+			}
+
+			.mvc-rooms-surface{
+				display: none;
+				position: absolute;
+				bottom: 0;
+				left: 0;
+				width: 100%;
+				padding: 2px 0;
+				background-color: white;
+				border-top: 1px solid grey;
+				height: 8px;
+				line-height: 8px;
+				font-size: 10px;
+				z-index: 1;
 			}
 
 			&:not([data-amount="0"]){
