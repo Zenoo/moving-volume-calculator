@@ -1,11 +1,85 @@
+/**
+ * Room details
+ * @typedef Room
+ * @type {Object}
+ * @property {String} icon URL or HTML of the room's icon
+ * @property {Object.<String, String>} lang Object storing room's translation in mulitple languages
+ * @property {Number} surface The room's average surface
+ * @property {Number} ratio The room's average surface to volume ratio
+ * @memberof MovingVolumeCalculator
+ * @example
+ * {
+ *   icon: 'https://your.icon',
+ *   lang: {
+ *     en: 'Kitchen',
+ *     fr: 'Cuisine'
+ *   },
+ *   surface: 14,
+ *   ratio: 0.45
+ * }
+ */
+
+/**
+ * Rooms object list
+ * @typedef Rooms
+ * @type {Object.<String, MovingVolumeCalculator.Room>}
+ * @memberof MovingVolumeCalculator
+ * @example
+ * {
+ *   kitchen: {
+ *     icon: 'https://your.icon',
+ *     lang: {
+ *       en: 'Kitchen',
+ *       fr: 'Cuisine'
+ *     },
+ *     surface: 14,
+ *     ratio: 0.45
+ *   }, ...
+ * }
+ */
+
+/**
+ * Translations object
+ * @typedef Lang
+ * @type {Object.<String, String>}
+ * @memberof MovingVolumeCalculator
+ * @example
+ * {
+ *   roomsOptionEnable: 'I prefer filling out my rooms\' details',
+ *   roomsOptionDisable: 'I\'d rather fill out my surface'
+ * }
+ */
+
+/**
+ * Translations object list
+ * @typedef Dictionary
+ * @type {Object.<String, MovingVolumeCalculator.Lang>}
+ * @memberof MovingVolumeCalculator
+ * @example
+ * {
+ *   en: {
+ *     roomsOptionEnable: 'I prefer filling out my rooms\' details',
+ *     roomsOptionDisable: 'I\'d rather fill out my surface'
+ *   },
+ *   fr: {
+ *     roomsOptionEnable: 'Je préfère renseigner le détail de mes pièces',
+ *     roomsOptionDisable: 'Je préfère renseigner ma surface'
+ *   }
+ * }
+ */
+
 /** MovingVolumeCalculator Class used to handle the MovingVolumeCalculator module */
 class MovingVolumeCalculator{ //eslint-disable-line no-unused-vars
+
 	/**
      * Creates an instance of MovingVolumeCalculator
      * and checks for invalid parameters
-     * @param {(Element|String)} target                   The wrapper for the MovingVolumeCalculator module
-     * @param {Object}           [parameters]             Additional optional parameters
-     * @param {String}           [parameters.lang=en]     The lang to use
+	 * @param {(Element|String)} 					target                   				The wrapper for the MovingVolumeCalculator module
+     * @param {Object}           					[parameters]            				Additional optional parameters
+     * @param {String}           					[parameters.lang=en]     				The lang to use
+     * @param {Number}           					[parameters.surfaceToVolumeRatio=0.45]  Average surface to volume ratio
+	 * @param {MovingVolumeCalculator.Rooms}    	[parameters.rooms]       				Sets custom rooms to display
+	 * @param {MovingVolumeCalculator.Dictionary}   [parameters.dictionary]  				Adds custom translations to the dictionary
      */
     constructor(target, parameters){
         /** 
@@ -35,7 +109,7 @@ class MovingVolumeCalculator{ //eslint-disable-line no-unused-vars
 		 * The average surface to volume ratio
 		 * @type {Number} 
 		 */
-		this.surfaceToVolumeRatio = 0.45;
+		this.surfaceToVolumeRatio = this._parameters.surfaceToVolumeRatio || 0.45;
 
         /** 
 		 * The estimated volume
@@ -182,6 +256,8 @@ class MovingVolumeCalculator{ //eslint-disable-line no-unused-vars
 		 */
 		let line = document.createElement('p');
 
+		line.classList.add('mvc-volume-wrapper');
+
 		this._wrapper.appendChild(line);
 
 		/** @private */
@@ -208,7 +284,7 @@ class MovingVolumeCalculator{ //eslint-disable-line no-unused-vars
 		 *	Surface Input
 		 */
 		line = document.createElement('p');
-		line.classList.add('mvc-hidden');
+		line.classList.add('mvc-hidden', 'mvc-surface-wrapper');
 		this._wrapper.appendChild(line);
 
 		/** @private */
@@ -348,6 +424,8 @@ class MovingVolumeCalculator{ //eslint-disable-line no-unused-vars
 
 				this._surfaceInput.disabled = true;
 
+				this._surfaceOption.classList.add('mvc-hidden');
+				this._surfaceInput.parentElement.classList.add('mvc-hidden');
 				this._roomsList[0].parentElement.classList.remove('mvc-hidden');
 			}else{
 				this._roomsOption.classList.remove('mvc-rooms-disable');
@@ -356,6 +434,9 @@ class MovingVolumeCalculator{ //eslint-disable-line no-unused-vars
 
 				this._surfaceInput.disabled = false;
 
+				
+				this._surfaceOption.classList.remove('mvc-hidden');
+				this._surfaceInput.parentElement.classList.remove('mvc-hidden');
 				this._roomsList[0].parentElement.classList.add('mvc-hidden');
 			}
 		});
