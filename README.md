@@ -24,7 +24,29 @@ let movingVolumeCalculator = new MovingVolumeCalculator(element, options);
 
 ```
 {
-
+	lang: 'en', // Language to use
+	surfaceToVolumeRatio: 0.45, // Default surface to volume ratio
+	rooms: { // See https://zenoo.github.io/moving-volume-calculator/MovingVolumeCalculator.html#.Rooms
+		kitchen: {
+			icon: 'https://your.icon',
+			lang: {
+			en: 'Kitchen',
+			fr: 'Cuisine'
+			},
+			surface: 14,
+			ratio: 0.45
+		}, ...
+	},
+	dictionary: {// See https://zenoo.github.io/moving-volume-calculator/MovingVolumeCalculator.html#.Dictionary
+		en: {
+			roomsOptionEnable: 'I prefer filling out my rooms\' details',
+			roomsOptionDisable: 'I\'d rather fill out my surface'
+		},
+		fr: {
+			roomsOptionEnable: 'Je préfère renseigner le détail de mes pièces',
+			roomsOptionDisable: 'Je préfère renseigner ma surface'
+		}
+	}
 }
 ```
 * **Methods**
