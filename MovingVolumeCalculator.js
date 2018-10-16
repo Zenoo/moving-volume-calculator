@@ -218,8 +218,9 @@ class MovingVolumeCalculator{ //eslint-disable-line no-unused-vars
 				wrongVolume: 'The volume isn\'t a valid number',
 				surface: 'Surface (m2)',
 				wrongSurface: 'The surface isn\'t a valid number',
-				roomsOptionEnable: 'I prefer filling out my rooms\' details',
-				roomsOptionDisable: 'I\'d rather fill out my surface'
+				roomsOptionEnable: 'I prefer filling out my rooms\' detail',
+				roomsOptionDisable: 'I\'d rather fill out my surface',
+				validateButton: 'Validate'
 			},
 			fr: {
 				volume: 'Volume (m3)',
@@ -229,7 +230,8 @@ class MovingVolumeCalculator{ //eslint-disable-line no-unused-vars
 				surface: 'Surface (m2)',
 				wrongSurface: 'The surface isn\'t a valid number',
 				roomsOptionEnable: 'Je préfère renseigner le détail de mes pièces',
-				roomsOptionDisable: 'Je préfère renseigner ma surface'
+				roomsOptionDisable: 'Je préfère renseigner ma surface',
+				validateButton: 'Valider'
 			}
 		};
 		
@@ -357,6 +359,18 @@ class MovingVolumeCalculator{ //eslint-disable-line no-unused-vars
 
 		/** @private */
 		this._roomsList = Array.from(roomsList.children);
+
+		/*
+		 *	Validator
+		 */
+		line = document.createElement('p');
+		line.classList.add('mvc-validate');
+		this._wrapper.appendChild(line);
+
+		this._validator = document.createElement('button');
+		this._validator.innerText = this._translated().validateButton;
+		line.appendChild(this._validator);
+		
 	}
 
 	/**
@@ -462,6 +476,18 @@ class MovingVolumeCalculator{ //eslint-disable-line no-unused-vars
 				this.updateData();
 			});
 		});
+
+		//Validation handler
+		this._validator.addEventListener('click', () => {
+			this.validate();
+		});
+
+		//Unvalidation handler
+		this._volumeInput.parentElement.addEventListener('click', () => {
+			if(this._volumeInput.disabled){
+				this.validate(false);
+			}
+		});
 	}
 
 	/**
@@ -541,10 +567,48 @@ class MovingVolumeCalculator{ //eslint-disable-line no-unused-vars
 
 	/**
      * Sets the lang
+	 * @param {String} lang The lang to set
 	 * @returns {MovingVolumeCalculator} The current MovingVolumeCalculator
      */
     setLang(lang){
 		this._parameters.lang = lang || 'en';
+
+		return this;
+	}
+
+	/**
+     * Sets the volume
+	 * @param {String} volume The volume to set
+	 * @returns {MovingVolumeCalculator} The current MovingVolumeCalculator
+     */
+    setVolume(volume){
+		this._volumeInput.value = volume;
+
+		return this.updateData();
+	}
+
+	/**
+     * Validates the current volume
+	 * @param {Boolean} [toggler=true] TRUE to validate | false to unvalidate
+	 * @returns {MovingVolumeCalculator} The current MovingVolumeCalculator
+     */
+    validate(toggler = true){
+		if(toggler){
+			this.volume = this.data.volume || 0;
+			this._volumeInput.value = this.volume;
+			this._volumeInput.disabled = true;
+	
+			this._surfaceOption.parentNode.classList.add('mvc-hidden');
+			this._surfaceInput.parentNode.classList.add('mvc-hidden');
+			this._roomsOption.parentNode.classList.add('mvc-hidden');
+			this._roomsList[0].parentNode.classList.add('mvc-hidden');
+			this._validator.parentNode.classList.add('mvc-hidden');
+		}else{
+			this._volumeInput.disabled = false;
+			this._surfaceOption.parentNode.classList.remove('mvc-hidden');
+			this._validator.parentNode.classList.remove('mvc-hidden');
+		}
+		
 
 		return this;
 	}
