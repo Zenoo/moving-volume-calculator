@@ -78,6 +78,7 @@ class MovingVolumeCalculator{ //eslint-disable-line no-unused-vars
      * @param {Object}           					[parameters]            				Additional optional parameters
      * @param {String}           					[parameters.lang=en]     				The lang to use
      * @param {Number}           					[parameters.surfaceToVolumeRatio=0.45]  Average surface to volume ratio
+     * @param {Boolean}           					[parameters.stylised=true]  			Use the stylised version of the Calculator
 	 * @param {MovingVolumeCalculator.Rooms}    	[parameters.rooms]       				Sets custom rooms to display
 	 * @param {MovingVolumeCalculator.Dictionary}   [parameters.dictionary]  				Adds custom translations to the dictionary
      */
@@ -93,7 +94,12 @@ class MovingVolumeCalculator{ //eslint-disable-line no-unused-vars
         if(this._wrapper.classList.contains('mvc-wrapper')) throw new Error('MovingVolumeCalculator: The element has already been initialized.');
 
         /** @private */
-		this._parameters = parameters || {};
+		this._parameters = {
+			lang: 'en',
+			surfaceToVolumeRatio: 0.45,
+			stylised: true,
+			...parameters
+		};
 
 		/** 
 		 * The available informations
@@ -109,15 +115,13 @@ class MovingVolumeCalculator{ //eslint-disable-line no-unused-vars
 		 * The average surface to volume ratio
 		 * @type {Number} 
 		 */
-		this.surfaceToVolumeRatio = this._parameters.surfaceToVolumeRatio || 0.45;
+		this.surfaceToVolumeRatio = this._parameters.surfaceToVolumeRatio;
 
         /** 
 		 * The estimated volume
 		 * @type {Number} 
 		 */
         this.volume = 0;
-
-        if(!this._parameters.lang) this._parameters.lang = 'en';
 
 		this._loadRooms();
 		this._loadDictionary();
@@ -212,26 +216,26 @@ class MovingVolumeCalculator{ //eslint-disable-line no-unused-vars
 		/** @private */
 		this._dictionary = {
 			en: {
-				volume: 'Volume (m3)',
+				volume: 'Volume',
 				surfaceOptionEnable: 'I don\'t know my volume / I\'d rather fill out my surface',
 				surfaceOptionDisable: 'I\'d rather fill out my volume',
 				wrongVolume: 'The volume isn\'t a valid number',
-				surface: 'Surface (m2)',
+				surface: 'Surface',
 				wrongSurface: 'The surface isn\'t a valid number',
 				roomsOptionEnable: 'I prefer filling out my rooms\' detail',
 				roomsOptionDisable: 'I\'d rather fill out my surface',
-				validateButton: 'Validate'
+				validateButton: 'Validate my volume'
 			},
 			fr: {
-				volume: 'Volume (m3)',
+				volume: 'Volume',
 				surfaceOptionEnable: 'Je ne connais pas mon volume / Je préfère renseigner ma surface',
 				surfaceOptionDisable: 'Je préfère renseigner mon volume',
 				wrongVolume: 'Le volume n\'est pas un nombre valide',
-				surface: 'Surface (m2)',
+				surface: 'Surface',
 				wrongSurface: 'The surface isn\'t a valid number',
 				roomsOptionEnable: 'Je préfère renseigner le détail de mes pièces',
 				roomsOptionDisable: 'Je préfère renseigner ma surface',
-				validateButton: 'Valider'
+				validateButton: 'Valider mon volume'
 			}
 		};
 		
@@ -252,6 +256,7 @@ class MovingVolumeCalculator{ //eslint-disable-line no-unused-vars
      */
     _build(){
 		this._wrapper.classList.add('mvc-wrapper');
+		if(this._parameters.stylised) this._wrapper.classList.add('mvc-stylised');
 
 		/*
 		 *	Volume Input
@@ -262,10 +267,15 @@ class MovingVolumeCalculator{ //eslint-disable-line no-unused-vars
 
 		this._wrapper.appendChild(line);
 
+		let label = document.createElement('span');
+
+		label.classList.add('mvc-label');
+		label.innerHTML = this._translated().volume + ' (m<sup>3</sup>)';
+		line.appendChild(label);
+
 		/** @private */
 		this._volumeInput = document.createElement('input');
 		this._volumeInput.classList.add('mvc-volume-input');
-		this._volumeInput.placeholder = this._translated().volume;
 		line.appendChild(this._volumeInput);
 
 		/*
@@ -289,10 +299,14 @@ class MovingVolumeCalculator{ //eslint-disable-line no-unused-vars
 		line.classList.add('mvc-hidden', 'mvc-surface-wrapper');
 		this._wrapper.appendChild(line);
 
+		label = document.createElement('span');
+		label.classList.add('mvc-label');
+		label.innerHTML = this._translated().surface + ' (m<sup>2</sup>)';
+		line.appendChild(label);
+
 		/** @private */
 		this._surfaceInput = document.createElement('input');
 		this._surfaceInput.classList.add('mvc-surface-input');
-		this._surfaceInput.placeholder = this._translated().surface;
 		line.appendChild(this._surfaceInput);
 
 		/*
@@ -312,10 +326,14 @@ class MovingVolumeCalculator{ //eslint-disable-line no-unused-vars
 		/*
 		 *	Rooms choice
 		 */
+		line = document.createElement('p');
+		line.classList.add('mvc-rooms-wrapper', 'mvc-hidden');
+		this._wrapper.appendChild(line);
+
 		const roomsList = document.createElement('ul');
 
-		roomsList.classList.add('mvc-hidden', 'mvc-rooms');
-		this._wrapper.appendChild(roomsList);
+		roomsList.classList.add('mvc-rooms');
+		line.appendChild(roomsList);
 
 		/** @private */
 		this._roomsCancel = [];
@@ -364,7 +382,7 @@ class MovingVolumeCalculator{ //eslint-disable-line no-unused-vars
 		 *	Validator
 		 */
 		line = document.createElement('p');
-		line.classList.add('mvc-validate');
+		line.classList.add('mvc-validate', 'mvc-hidden');
 		this._wrapper.appendChild(line);
 
 		this._validator = document.createElement('button');
@@ -402,6 +420,7 @@ class MovingVolumeCalculator{ //eslint-disable-line no-unused-vars
 
 				this._surfaceInput.parentElement.classList.remove('mvc-hidden');
 				this._roomsOption.parentElement.classList.remove('mvc-hidden');
+				this._validator.parentElement.classList.remove('mvc-hidden');
 			}else{
 				this._surfaceOption.classList.remove('mvc-surface-disable');
 				this._surfaceOption.classList.add('mvc-surface-enable');
@@ -411,6 +430,7 @@ class MovingVolumeCalculator{ //eslint-disable-line no-unused-vars
 
 				this._surfaceInput.parentElement.classList.add('mvc-hidden');
 				this._roomsOption.parentElement.classList.add('mvc-hidden');
+				this._validator.parentElement.classList.add('mvc-hidden');
 			}
 		});
 
@@ -436,22 +456,18 @@ class MovingVolumeCalculator{ //eslint-disable-line no-unused-vars
 				this._roomsOption.classList.add('mvc-rooms-disable');
 				this._roomsOption.innerText = this._translated().roomsOptionDisable;
 
-				this._surfaceInput.disabled = true;
-
-				this._surfaceOption.classList.add('mvc-hidden');
+				this._surfaceOption.parentNode.classList.add('mvc-hidden');
 				this._surfaceInput.parentElement.classList.add('mvc-hidden');
-				this._roomsList[0].parentElement.classList.remove('mvc-hidden');
+				this._roomsList[0].parentElement.parentElement.classList.remove('mvc-hidden');
 			}else{
 				this._roomsOption.classList.remove('mvc-rooms-disable');
 				this._roomsOption.classList.add('mvc-rooms-enable');
 				this._roomsOption.innerText = this._translated().roomsOptionEnable;
 
-				this._surfaceInput.disabled = false;
-
 				
-				this._surfaceOption.classList.remove('mvc-hidden');
+				this._surfaceOption.parentNode.classList.remove('mvc-hidden');
 				this._surfaceInput.parentElement.classList.remove('mvc-hidden');
-				this._roomsList[0].parentElement.classList.add('mvc-hidden');
+				this._roomsList[0].parentElement.parentElement.classList.add('mvc-hidden');
 			}
 		});
 
@@ -484,7 +500,7 @@ class MovingVolumeCalculator{ //eslint-disable-line no-unused-vars
 
 		//Unvalidation handler
 		this._volumeInput.parentElement.addEventListener('click', () => {
-			if(this._volumeInput.disabled){
+			if(this._volumeInput.classList.contains('mvc-validated')){
 				this.validate(false);
 			}
 		});
@@ -597,16 +613,26 @@ class MovingVolumeCalculator{ //eslint-disable-line no-unused-vars
 			this.volume = this.data.volume || 0;
 			this._volumeInput.value = this.volume;
 			this._volumeInput.disabled = true;
+			this._volumeInput.classList.add('mvc-validated');
 	
 			this._surfaceOption.parentNode.classList.add('mvc-hidden');
+			this._surfaceOption.classList.add('mvc-surface-enable');
+			this._surfaceOption.classList.remove('mvc-surface-disable');
+			this._surfaceOption.innerText = this._translated().surfaceOptionEnable;
 			this._surfaceInput.parentNode.classList.add('mvc-hidden');
+
 			this._roomsOption.parentNode.classList.add('mvc-hidden');
-			this._roomsList[0].parentNode.classList.add('mvc-hidden');
+			this._roomsOption.classList.add('mvc-rooms-enable');
+			this._roomsOption.classList.remove('mvc-rooms-disable');
+			this._roomsOption.innerText = this._translated().roomsOptionEnable;
+
+			this._roomsList[0].parentNode.parentNode.classList.add('mvc-hidden');
+
 			this._validator.parentNode.classList.add('mvc-hidden');
 		}else{
 			this._volumeInput.disabled = false;
+			this._volumeInput.classList.remove('mvc-validated');
 			this._surfaceOption.parentNode.classList.remove('mvc-hidden');
-			this._validator.parentNode.classList.remove('mvc-hidden');
 		}
 		
 
@@ -618,6 +644,7 @@ class MovingVolumeCalculator{ //eslint-disable-line no-unused-vars
      */
     destroy(){
 		this._wrapper.innerHTML = '';
+		this._wrapper.classList.remove('mvc-wrapper', 'mvc-stylised');
 	}
 
 	/**
@@ -638,6 +665,9 @@ class MovingVolumeCalculator{ //eslint-disable-line no-unused-vars
     static destroy(selector){
 		const element = document.querySelector(selector);
 
-		if(element) element.remove();
+		if(element && element.classList.contains('mvc-wrapper')){
+			element.innerHTML = '';
+			element.classList.remove('mvc-wrapper', 'mvc-stylised');
+		}
 	}
 }

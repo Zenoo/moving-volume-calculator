@@ -2,6 +2,12 @@
 	font-family: sans-serif;
 	width: 100%;
 
+	&>*{
+		transition: max-height .5s, transform .2s;
+		transition-timing-function: ease-in;
+		transform: translateX(0);
+	}
+
 	a{
 		text-decoration: none;
 
@@ -15,12 +21,21 @@
 	}
 
 	.mvc-hidden{
-		display: none !important;
+		transition-timing-function: ease-out;
+		transform: translateX(100vw);
+		max-height: 0 !important;
+		margin: 0 !important;
+		overflow: hidden;
 	}
 
 	p{
 		margin: 0;
 		padding: 0;
+		max-height: 200px;
+
+		.mvc-label{
+			display: block;
+		}
 
 		input{
 			padding: 5px;
@@ -48,9 +63,9 @@
 		text-align: center;
 
 		.mvc-volume-input{
-			width: 80px;
+			width: 30px;
 
-			&:disabled{
+			&.mvc-validated{
 				cursor: pointer;
 			}
 		}
@@ -82,6 +97,14 @@
 
 	.mvc-surface-wrapper{
 		text-align: center;
+		margin-top: 10px;
+
+		.mvc-surface-input{
+			font-size: inherit;
+			height: auto;
+			width: auto;
+			width: 36px;
+		}
 	}
 
 	.mvc-rooms-toggler{
@@ -112,6 +135,9 @@
 		display: flex;
 		list-style-type: none;
 		flex-wrap: wrap;
+		justify-content: center;
+		padding-left: 0;
+		max-height: 1000px;
 
 		li{
 			position: relative;
@@ -228,5 +254,22 @@
 				}
 			}
 		}
+	}
+
+	.mvc-validate{
+		text-align: center;
+		margin-top: 10px;
+		
+		button{
+			padding: 2px 5px;
+		}
+	}
+
+	/*
+	 * STYLISED
+	 */
+	&.mvc-stylised{
+		padding: 5px 0;
+		border: 1px solid grey;
 	}
 }
