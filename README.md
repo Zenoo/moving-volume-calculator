@@ -26,6 +26,7 @@ let movingVolumeCalculator = new MovingVolumeCalculator(element, options);
 {
 	lang: 'en', // Language to use
 	surfaceToVolumeRatio: 0.45, // Default surface to volume ratio
+	stylised: true, // Use the default Calculator theme
 	rooms: { // See https://zenoo.github.io/moving-volume-calculator/MovingVolumeCalculator.html#.Rooms
 		kitchen: {
 			icon: 'https://your.icon',
