@@ -1,6 +1,6 @@
 {
   "name": "moving-volume-calculator",
-  "version": "0.0.2",
+  "version": "0.0.3",
   "description": "Calculate the volume for your move",
   "main": "MovingVolumeCalculator.js",
   "scripts": {
@@ -11,12 +11,12 @@
     "url": "git+https://github.com/Zenoo/moving-volume-calculator.git"
   },
   "keywords": [
-	"move",
-	"moving",
-	"volume",
-	"surface",
-	"rooms",
-	"calculator"
+    "move",
+    "moving",
+    "volume",
+    "surface",
+    "rooms",
+    "calculator"
   ],
   "author": "Zenoo",
   "license": "MIT",
