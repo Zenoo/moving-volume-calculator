@@ -11,7 +11,12 @@
     "url": "git+https://github.com/Zenoo/moving-volume-calculator.git"
   },
   "keywords": [
-    "loader"
+	"move",
+	"moving",
+	"volume",
+	"surface",
+	"rooms",
+	"calculator"
   ],
   "author": "Zenoo",
   "license": "MIT",
