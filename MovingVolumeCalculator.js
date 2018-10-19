@@ -102,6 +102,18 @@ class MovingVolumeCalculator{ //eslint-disable-line no-unused-vars
 		};
 
 		/** 
+		 * List of callbacks to call after a validation
+		 * @private 
+		 */
+		this._onValidate = [];
+
+		/** 
+		 * List of callbacks to call after a volume change
+		 * @private 
+		 */
+		this._onChange = [];
+
+		/** 
 		 * The available informations
 		 * @type {Object} 
 		 */
@@ -629,6 +641,9 @@ class MovingVolumeCalculator{ //eslint-disable-line no-unused-vars
 			this._roomsList[0].parentNode.parentNode.classList.add('mvc-hidden');
 
 			this._validator.parentNode.classList.add('mvc-hidden');
+
+			// Call onValidate callbacks
+			for(const callback of this._onValidate) Reflect.apply(callback, this, this.data);
 		}else{
 			this._volumeInput.disabled = false;
 			this._volumeInput.classList.remove('mvc-validated');
@@ -638,6 +653,35 @@ class MovingVolumeCalculator{ //eslint-disable-line no-unused-vars
 
 		return this;
 	}
+
+	/**
+     * Function called after a volume validation.
+     * Using <code>this</code> inside it will return the current {@link MovingVolumeCalculator}
+     *
+     * @callback onValidateCallback
+     * @param {Object} data The module data
+     */
+
+    /**
+     * Adds a callback to be used when the user validates the volume
+     * @param {onSelectCallback} callback Function to call after the user's selection
+     * @returns {MovingVolumeCalculator}  The current {@link MovingVolumeCalculator}
+     */
+    onValidate(callback){
+		this._onValidate.push(callback);
+
+		return this;
+	}
+
+	/**
+     * Removes every callback previously added with {@link MovingVolumeCalculator#onValidate}
+     * @returns {MovingVolumeCalculator} The current {@link MovingVolumeCalculator}
+     */
+    offValidate(){
+		this._onValidate = [];
+		
+        return this;
+    }
 
 	/**
      * Removes any MovingVolumeCalculator mutation from the DOM
