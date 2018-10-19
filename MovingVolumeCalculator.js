@@ -713,7 +713,15 @@ class MovingVolumeCalculator{ //eslint-disable-line no-unused-vars
 		this._onChange = [];
 		
         return this;
-    }
+	}
+	
+	/**
+	 * Checks if the volume value is valid
+	 * @returns {Boolean} TRUE if the volume input contains a valid value
+	 */
+	isValid(){
+		return this._volumeInput.value.length && (/^\d+([.,]\d{0,2})?$/u).test(this._volumeInput.value);
+	}
 
 	/**
      * Removes any MovingVolumeCalculator mutation from the DOM
