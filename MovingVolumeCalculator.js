@@ -415,6 +415,9 @@ class MovingVolumeCalculator{ //eslint-disable-line no-unused-vars
 				this.volume = +this._volumeInput.value.replace(',', '.');
 				this.updateData();
 			}else if(this._volumeInput.value.length) this._addHint(this._volumeInput, 'error', this._translated().wrongVolume);
+			
+			// Call onChange callbacks
+			for(const callback of this._onChange) Reflect.apply(callback, this, +this._volumeInput.value);
 		});
 
 		// Surface toggler handler
@@ -664,7 +667,7 @@ class MovingVolumeCalculator{ //eslint-disable-line no-unused-vars
 
     /**
      * Adds a callback to be used when the user validates the volume
-     * @param {onSelectCallback} callback Function to call after the user's selection
+     * @param {onSelectCallback} callback Function to call after the user's validation
      * @returns {MovingVolumeCalculator}  The current {@link MovingVolumeCalculator}
      */
     onValidate(callback){
@@ -679,6 +682,35 @@ class MovingVolumeCalculator{ //eslint-disable-line no-unused-vars
      */
     offValidate(){
 		this._onValidate = [];
+		
+        return this;
+	}
+	
+	/**
+     * Function called after a volume change.
+     * Using <code>this</code> inside it will return the current {@link MovingVolumeCalculator}
+     *
+     * @callback onChangeCallback
+     * @param {Number} volume The current volume
+     */
+
+    /**
+     * Adds a callback to be used when the user changes the volume
+     * @param {onSelectCallback} callback Function to call after the user's change
+     * @returns {MovingVolumeCalculator}  The current {@link MovingVolumeCalculator}
+     */
+    onChange(callback){
+		this._onChange.push(callback);
+
+		return this;
+	}
+
+	/**
+     * Removes every callback previously added with {@link MovingVolumeCalculator#onChange}
+     * @returns {MovingVolumeCalculator} The current {@link MovingVolumeCalculator}
+     */
+    offChange(){
+		this._onChange = [];
 		
         return this;
     }
