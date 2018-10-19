@@ -417,7 +417,7 @@ class MovingVolumeCalculator{ //eslint-disable-line no-unused-vars
 			}else if(this._volumeInput.value.length) this._addHint(this._volumeInput, 'error', this._translated().wrongVolume);
 			
 			// Call onChange callbacks
-			for(const callback of this._onChange) Reflect.apply(callback, this, +this._volumeInput.value);
+			for(const callback of this._onChange) Reflect.apply(callback, this, [+this._volumeInput.value]);
 		});
 
 		// Surface toggler handler
@@ -646,7 +646,7 @@ class MovingVolumeCalculator{ //eslint-disable-line no-unused-vars
 			this._validator.parentNode.classList.add('mvc-hidden');
 
 			// Call onValidate callbacks
-			for(const callback of this._onValidate) Reflect.apply(callback, this, this.data);
+			for(const callback of this._onValidate) Reflect.apply(callback, this, [this.data]);
 		}else{
 			this._volumeInput.disabled = false;
 			this._volumeInput.classList.remove('mvc-validated');
