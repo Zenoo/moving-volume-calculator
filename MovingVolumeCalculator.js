@@ -290,6 +290,12 @@ class MovingVolumeCalculator{ //eslint-disable-line no-unused-vars
 		this._volumeInput.classList.add('mvc-volume-input');
 		line.appendChild(this._volumeInput);
 
+		/** @private */
+		this._quickValidator = document.createElement('button');
+		this._quickValidator.classList.add('mvc-volume-validate');
+		this._quickValidator.innerHTML = 'OK';
+		line.appendChild(this._quickValidator);
+
 		/*
 		 *	Surface toggler
 		 */
@@ -420,6 +426,11 @@ class MovingVolumeCalculator{ //eslint-disable-line no-unused-vars
 			for(const callback of this._onChange) Reflect.apply(callback, this, [+this._volumeInput.value]);
 		});
 
+		// Volume validator handler
+		this._quickValidator.addEventListener('click', () => {
+			this.validate();
+		});
+
 		// Surface toggler handler
 		this._surfaceOption.addEventListener('click', e => {
 			e.preventDefault();
@@ -433,6 +444,8 @@ class MovingVolumeCalculator{ //eslint-disable-line no-unused-vars
 
 				this._volumeInput.disabled = true;
 
+				this._quickValidator.classList.add('mvc-hidden');
+
 				this._surfaceInput.parentElement.classList.remove('mvc-hidden');
 				this._roomsOption.parentElement.classList.remove('mvc-hidden');
 				this._validator.parentElement.classList.remove('mvc-hidden');
@@ -442,6 +455,8 @@ class MovingVolumeCalculator{ //eslint-disable-line no-unused-vars
 				this._surfaceOption.innerText = this._translated().surfaceOptionEnable;
 
 				this._volumeInput.disabled = false;
+
+				this._quickValidator.classList.remove('mvc-hidden');
 
 				this._surfaceInput.parentElement.classList.add('mvc-hidden');
 				this._roomsOption.parentElement.classList.add('mvc-hidden');
@@ -514,8 +529,8 @@ class MovingVolumeCalculator{ //eslint-disable-line no-unused-vars
 		});
 
 		//Unvalidation handler
-		this._volumeInput.parentElement.addEventListener('click', () => {
-			if(this._volumeInput.classList.contains('mvc-validated')){
+		this._volumeInput.parentElement.addEventListener('click', e => {
+			if(e.target == this._volumeInput && this._volumeInput.classList.contains('mvc-validated')){
 				this.validate(false);
 			}
 		});
@@ -628,8 +643,10 @@ class MovingVolumeCalculator{ //eslint-disable-line no-unused-vars
 			this.volume = this.data.volume || 0;
 			this._volumeInput.value = this.volume;
 			this._volumeInput.disabled = true;
+
 			this._volumeInput.classList.add('mvc-validated');
-	
+			this._quickValidator.classList.add('mvc-hidden');
+
 			this._surfaceOption.parentNode.classList.add('mvc-hidden');
 			this._surfaceOption.classList.add('mvc-surface-enable');
 			this._surfaceOption.classList.remove('mvc-surface-disable');
@@ -650,6 +667,7 @@ class MovingVolumeCalculator{ //eslint-disable-line no-unused-vars
 		}else{
 			this._volumeInput.disabled = false;
 			this._volumeInput.classList.remove('mvc-validated');
+			this._quickValidator.classList.remove('mvc-hidden');
 			this._surfaceOption.parentNode.classList.remove('mvc-hidden');
 		}
 		
