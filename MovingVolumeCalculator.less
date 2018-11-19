@@ -1,5 +1,10 @@
+@font-face{
+	font-family: 'Montserrat';
+	src: url('assets/Montserrat-Regular.ttf');
+}
+
 .mvc-wrapper{
-	font-family: sans-serif;
+	font-family: 'Montserrat', sans-serif;
 	width: 100%;
 
 	&>*{
@@ -25,7 +30,9 @@
 		transform: translateX(100vw);
 		max-height: 0 !important;
 		margin: 0 !important;
+		padding: 0 !important;
 		overflow: hidden;
+		width: 0;
 	}
 
 	p{
@@ -270,6 +277,89 @@
 	 */
 	&.mvc-stylised{
 		padding: 5px 0;
-		border: 1px solid grey;
+		border: 1px solid transparent;
+		border-radius: 5px;
+		-webkit-box-shadow: 0px 0px 5px 0px rgba(156,156,156,1);
+		-moz-box-shadow: 0px 0px 5px 0px rgba(156,156,156,1);
+		box-shadow: 0px 0px 5px 0px rgba(156,156,156,1);
+		background-color: #f8f8f8;
+
+		input, button{
+			-webkit-box-shadow: 0px 0px 5px 0px rgba(156,156,156,1);
+			-moz-box-shadow: 0px 0px 5px 0px rgba(156,156,156,1);
+			box-shadow: 0px 0px 5px 0px rgba(156,156,156,1);
+			border-radius: 20px;
+			border: 1px solid transparent;
+			padding: 5px 10px;
+			text-align: center;
+
+			&:focus,&:not(:disabled):hover{
+				-webkit-box-shadow: 0 0 3pt 2pt #4D90FE;
+				-moz-box-shadow: 0 0 3pt 2pt #4D90FE;
+				box-shadow: 0 0 3pt 2pt #4D90FE;
+				outline: none;
+				cursor: pointer;
+
+				&+button{
+					-webkit-box-shadow: 0 0 3pt 2pt #4D90FE;
+					-moz-box-shadow: 0 0 3pt 2pt #4D90FE;
+					box-shadow: 0 0 3pt 2pt #4D90FE;
+					outline: none;
+					cursor: pointer;
+				}
+			}
+		}
+
+		.mvc-volume-input{
+			border-top-right-radius: 0;
+			border-bottom-right-radius: 0;
+			margin: 5px 0;
+
+			&.mvc-validated,&:disabled{
+				border-top-right-radius: 20px;
+				border-bottom-right-radius: 20px;
+			}
+		}
+
+		.mvc-volume-validate{
+			border-top-left-radius: 0;
+			border-bottom-left-radius: 0;
+		}
+
+		.mvc-surface-input{
+			margin: 5px 0;
+		}
+
+		.mvc-rooms-wrapper{
+			text-align: center;
+
+			.mvc-rooms{
+				display: inline-flex;
+				-webkit-box-shadow: 0px 0px 5px 0px rgba(156,156,156,1);
+				-moz-box-shadow: 0px 0px 5px 0px rgba(156,156,156,1);
+				box-shadow: 0px 0px 5px 0px rgba(156,156,156,1);
+				border-radius: 20px;
+				border: 1px solid transparent;
+
+				li{
+					background-color: white;
+					border: 0;
+					border-right: 1px solid grey;
+
+					&:first-of-type{
+						border-top-left-radius: 20px;
+						border-bottom-left-radius: 20px;
+					}
+
+					&:last-of-type{
+						border-right: 0;
+						border-top-right-radius: 20px;
+						border-bottom-right-radius: 20px;
+					}
+				}
+			}
+		}
+
+		
 	}
 }
